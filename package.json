@@ -1,0 +1,12 @@
+{
+    "name": "ws-daemon",
+    "version": "0.0.1",
+    "author": {
+        "name": "Noah Sandman",
+        "email": "noah@modulytic.com"
+    },
+    "dependencies": {
+        "ws": "*",
+        "getenv": "*"
+    }
+}
