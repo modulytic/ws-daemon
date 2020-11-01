@@ -42,7 +42,7 @@ The socket is located in the prefix, and is called `ws-daemon.sock`. It can be c
 
 Scripts are located in the `scripts/` subdirectory of the prefix.
 
-## Messaging
+### Messaging
 
 If this daemon receives a message, it will decode it as JSON. It expects this structure:
 
