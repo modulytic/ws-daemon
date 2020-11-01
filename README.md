@@ -4,7 +4,7 @@ This is a daemon that facilitates an easy, two-way, persistent, JSON-based, comm
 
 If the daemon is in server mode and it has multiple connections, it will message them each sequentially in a round-robin fashion.
 
-## Usage
+## How it Works
 
 ### Modes
 
@@ -56,3 +56,7 @@ If this daemon receives a message, it will decode it as JSON. It expects this st
 ```
 
 The parameter `name` should be the name of a file in `scripts/` with execute permissions. The params will be stringified and passed otherwise unmodified to that script as an argument.
+
+## Running
+
+Once your environment is configured, just run `npm start` to start the server.

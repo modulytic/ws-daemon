@@ -8,5 +8,8 @@
     "dependencies": {
         "ws": "*",
         "getenv": "*"
+    },
+    "scripts": {
+        "start": "node daemon.js"
     }
 }
