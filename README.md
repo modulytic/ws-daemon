@@ -26,7 +26,8 @@ In your prefix folder, create a file called config.json. If it is a client, it s
 }
 ```
 
-If it is a server, it is similar: 
+If it is a server, it is similar:
+
 ```json
 {
     "mode": "server",
@@ -59,4 +60,4 @@ The parameter `name` should be the name of a file in `scripts/` with execute per
 
 ## Running
 
-Once your environment is configured, just run `npm start` to start the server.
+Once your environment is configured, just run `npm start` to start the daemon. To run it in the background, run `npm start &`.
