@@ -1,5 +1,7 @@
 # ws-daemon
 
+**NOTE: This project is horribly written, as it was made in the span of about 3.5 hours late at night/early in the morning.** If this message is still here, it means I haven't cleaned it up yet. Use at your own risk.
+
 This is a daemon that facilitates an easy, two-way, persistent, JSON-based, communication channel between processes on different machines, in different languages, on different system. It communicates with local processes through a Unix socket, and remote processes through WebSockets. Remote processes can trigger scripts on your local system with custom params (received through WebSockets), and you can do the same for them (written to the local socket).
 
 If the daemon is in server mode and it has multiple connections, it will message them each sequentially in a round-robin fashion.
