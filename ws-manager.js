@@ -33,6 +33,10 @@ let wsm = {
                 console.log("Websockets: Endpoint " + indexInAC + " disconnected");
                 if (indexInAC > -1)
                     ACTIVE_CONNECTIONS.splice(indexInAC, 1)
+
+                // check if we made our round-robin index wrong
+                if (RR_NEXT_ENDPOINT >= ACTIVE_CONNECTIONS.length)
+                    RR_NEXT_ENDPOINT = 0;
             });
         }
 
@@ -44,10 +48,11 @@ let wsm = {
     },
 
     rrSendNext: function(msg) {
-        if (RR_NEXT_ENDPOINT++ >= ACTIVE_CONNECTIONS.length)
+        let ws = ACTIVE_CONNECTIONS[RR_NEXT_ENDPOINT++];
+
+        if (RR_NEXT_ENDPOINT >= ACTIVE_CONNECTIONS.length)
             RR_NEXT_ENDPOINT = 0;
 
-        let ws = ACTIVE_CONNECTIONS[RR_NEXT_ENDPOINT];
         if (ws)
             ws.send(msg);
     },
