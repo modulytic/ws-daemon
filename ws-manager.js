@@ -44,11 +44,10 @@ let wsm = {
     },
 
     rrSendNext: function(msg) {
-        let ws = ACTIVE_CONNECTIONS[RR_NEXT_ENDPOINT++];
-
-        if (RR_NEXT_ENDPOINT >= ACTIVE_CONNECTIONS.length)
+        if (RR_NEXT_ENDPOINT++ >= ACTIVE_CONNECTIONS.length)
             RR_NEXT_ENDPOINT = 0;
 
+        let ws = ACTIVE_CONNECTIONS[RR_NEXT_ENDPOINT];
         if (ws)
             ws.send(msg);
     },
