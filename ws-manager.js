@@ -1,12 +1,25 @@
 const constants = require("./constants.js");
 const spawn = require("child_process").spawn;
+const logging = require("./logging.js");
 
 function execScript(filename, params) {
     const scriptName = constants.getPrefixFile(filename, "scripts");
     let paramsStr    = JSON.stringify(params);
 
-    console.log("Spawning process", scriptName);
-    spawn(scriptName, [paramsStr]);
+    logging.stdout(`Starting ${scriptName}`);
+    
+    const childProcess = spawn(scriptName, [paramsStr]);
+    childProcess.stdout.on("data", (data) => {
+        logging.stdout(`stdout: ${data}`, tag=filename);
+    });
+
+    childProcess.stderr.on("data", (data) => {
+        logging.stderr(`stderr: ${data}`, tag=filename);
+    });
+
+    childProcess.on("close", (code) => {
+        logging.stdout(`exited with code ${code}`, tag=filename);
+    });
 }
 
 let isServer = false;
@@ -16,6 +29,7 @@ ACTIVE_CONNECTIONS = [];
 // next endpoint to be forwarded to, for round robin system
 let RR_NEXT_ENDPOINT = 0;
 
+const TAG = "WS";
 let wsm = {
     makeServer: function() {
         isServer = true;
@@ -25,12 +39,12 @@ let wsm = {
         // keep track of all active connections to a server
         if (isServer) {
             const numConnections = ACTIVE_CONNECTIONS.push(ws);
-            console.log("Websockets: Endpoint " + (numConnections-1) + " connected.");
+            logging.stdout(`Endpoint ${numConnections-1} connected.`, TAG);
 
             // endpoint disconnected, remove from active connections
             ws.on("close", function close() {
                 const indexInAC = ACTIVE_CONNECTIONS.indexOf(ws);
-                console.log("Websockets: Endpoint " + indexInAC + " disconnected");
+                logging.stdout(`Endpoint ${indexInAC} disconnected`, TAG);
                 if (indexInAC > -1)
                     ACTIVE_CONNECTIONS.splice(indexInAC, 1)
 
@@ -40,8 +54,8 @@ let wsm = {
             });
         }
 
+        // decode JSON and run file from scripts folder
         ws.on("message", function incoming(message) {
-            // decode JSON and run file from scripts folder
             const msgOps = JSON.parse(message);
             execScript(msgOps["name"], msgOps["params"]);
         });

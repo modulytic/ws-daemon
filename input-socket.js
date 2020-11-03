@@ -3,25 +3,27 @@
 
 const net = require("net");
 const constants = require("./constants.js");
+const logging = require("./logging.js");
 
 let UDS_CONNECTIONS = {};
 let server = null;
 
 // active Unix socket connections
+const TAG="UDS";
 let isock = {
     create: function(ws=null, fwd=null) {
         socket = constants.getPrefixFile("ws-daemon.sock");
 
-        console.log("Input socket: Listening at", socket);
+        logging.stdout(`Listening at ${socket}`, TAG);
         server = net.createServer(function(stream) {
-            console.log("Input socket: Received connection.");
+            logging.stdout("Received connection.", TAG);
 
             // Store all connections so we can terminate them if the server closes.
             // An object is better than an array for these.
             var self = Date.now();
             UDS_CONNECTIONS[self] = (stream);
             stream.on("end", function() {
-                console.log("Input socket: Client disconnected.");
+                logging.stdout("Client disconnected.", TAG);
                 delete UDS_CONNECTIONS[self];
             });
 
