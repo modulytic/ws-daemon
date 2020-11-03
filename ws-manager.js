@@ -1,25 +1,32 @@
 const constants = require("./constants.js");
 const spawn = require("child_process").spawn;
 const logging = require("./logging.js");
+const fs = require("fs");
 
 function execScript(filename, params) {
-    const scriptName = constants.getPrefixFile(filename, "scripts");
+    const scriptPath = constants.getPrefixFile(filename, "scripts");
     let paramsStr    = JSON.stringify(params);
 
-    logging.stdout(`Starting ${scriptName}`);
+    try {
+        if (fs.existsSync(scriptPath)) {
+            logging.stdout(`Starting ${scriptPath}`);
     
-    const childProcess = spawn(scriptName, [paramsStr]);
-    childProcess.stdout.on("data", (data) => {
-        logging.stdout(`stdout: ${data}`, tag=filename);
-    });
+            const childProcess = spawn(scriptPath, [paramsStr]);
+            childProcess.stdout.on("data", (data) => {
+                logging.stdout(`stdout: ${data}`, tag=filename);
+            });
 
-    childProcess.stderr.on("data", (data) => {
-        logging.stderr(`stderr: ${data}`, tag=filename);
-    });
+            childProcess.stderr.on("data", (data) => {
+                logging.stderr(`stderr: ${data}`, tag=filename);
+            });
 
-    childProcess.on("close", (code) => {
-        logging.stdout(`exited with code ${code}`, tag=filename);
-    });
+            childProcess.on("close", (code) => {
+                logging.stdout(`exited with code ${code}`, tag=filename);
+            });
+        }
+    } catch(err) {
+        logging.stderr(err);
+    }
 }
 
 let isServer = false;
