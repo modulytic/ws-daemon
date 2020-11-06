@@ -1,3 +1,6 @@
+// logging.js
+// Noah Sandman <noah@modulytic.com>
+
 function stdout(msg, tag="") {
     log_custom(console.log, msg, tag);
 }
@@ -14,6 +17,6 @@ function log_custom(f, msg, tag="") {
     f(`${timestamp}: ${tag}${msg}`);
 }
 
-module.exports = {
+export default {
     stdout, stderr
 };

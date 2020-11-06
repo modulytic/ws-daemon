@@ -5,11 +5,13 @@
         "name": "Noah Sandman",
         "email": "noah@modulytic.com"
     },
+    "type": "module",
     "dependencies": {
-        "ws": "*",
-        "getenv": "*"
+        "getenv": "*",
+        "reconnecting-websocket": "^4.4.0",
+        "ws": "*"
     },
     "scripts": {
-        "start": "node daemon.js"
+        "start": "node src/daemon.js"
     }
 }

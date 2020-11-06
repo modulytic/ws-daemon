@@ -1,7 +1,10 @@
-const fs = require("fs");
-const getenv = require("getenv");
+// constants.js
+// Noah Sandman <noah@modulytic.com>
 
-module.exports = {
+import fs from "fs";
+import getenv from "getenv";
+
+export default {
     getPrefix: function() {
         return getenv.string("WSDAEMON_PREFIX", "/root/ws-daemon");
     },

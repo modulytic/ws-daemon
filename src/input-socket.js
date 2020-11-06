@@ -1,18 +1,21 @@
+// input-socket.js
+// Noah Sandman <noah@modulytic.com>
+
 // Mostly based off this:
 // https://gist.github.com/Xaekai/e1f711cb0ad865deafc11185641c632a
 
-const net = require("net");
-const constants = require("./constants.js");
-const logging = require("./logging.js");
+import net from "net";
+import logging from "./logging.js";
+import constants from "./constants.js";
 
 let UDS_CONNECTIONS = {};
 let server = null;
 
 // active Unix socket connections
 const TAG="UDS";
-let isock = {
+export default {
     create: function(ws=null, fwd=null) {
-        socket = constants.getPrefixFile("ws-daemon.sock");
+        const socket = constants.getPrefixFile("ws-daemon2.sock");
 
         logging.stdout(`Listening at ${socket}`, TAG);
         server = net.createServer(function(stream) {
@@ -30,6 +33,8 @@ let isock = {
             // Messages are buffers
             stream.on("data", function(msg) {
                 const msg_str = msg.toString();
+                logging.stdout(`Forwarding message: ${msg_str}`, TAG);
+
                 if (fwd) {
                     fwd(msg_str);
                 } else if (ws) {
@@ -51,5 +56,3 @@ let isock = {
         }
     }
 };
-
-module.exports = { isock };
