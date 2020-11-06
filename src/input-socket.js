@@ -15,7 +15,7 @@ let server = null;
 const TAG="UDS";
 export default {
     create: function(ws=null, fwd=null) {
-        const socket = constants.getPrefixFile("ws-daemon2.sock");
+        const socket = constants.getPrefixFile("ws-daemon.sock");
 
         logging.stdout(`Listening at ${socket}`, TAG);
         server = net.createServer(function(stream) {
