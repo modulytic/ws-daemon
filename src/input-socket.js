@@ -41,13 +41,13 @@ export default {
 		    // We need to pause the dongle and invoke it after a set amount of time
                     ws.close();
 
-		    var devices_info = JSON.parse(fs.readFileSync('/root/ws-daemon/scripts/curr_device.json', 'utf8'));
+		    var devices_info = JSON.parse(fs.readFileSync('/root/ws-daemon/data/curr_device.json', 'utf8'));
 		    // Reset limits
 		    if (msg_json["params"]["pause_time"] == (60 * 60 * 24 * 1000)) {
 			    devices_info["daily_msg"] = [];
 		    }
 		    devices_info["hourly_msg"] = [];
-		    fs.writeFileSync('/root/ws-daemon/scripts/curr_device.json', JSON.stringify(devices_info));
+		    fs.writeFileSync('/root/ws-daemon/data/curr_device.json', JSON.stringify(devices_info));
 
 		    setTimeout(() => {
 			ws.reconnect();
