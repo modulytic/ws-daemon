@@ -21,23 +21,21 @@ export class WsClientConnector extends Connector {
 
         // generate Websockets URL
         const wsUrl = `${(secure)?"wss":"ws"}://${url}:${port}`;
-        
-        let wsClient = this;
 
         this.rws = new ReconnectingWebSocket(wsUrl, [], {
             WebSocket: ws
         });
 
-        this.rws.addEventListener("close", function() {
+        this.rws.addEventListener("close", () => {
             logging.stdout("Disconnected from server.", TAG);
         });
 
-        this.rws.addEventListener("open", function() {
+        this.rws.addEventListener("open", () => {
             logging.stdout("Connected to server.", TAG);
         });
 
-        this.rws.addEventListener("message", function(msg) {
-            msgRemote(msg.data, wsClient);
+        this.rws.addEventListener("message", (msg) => {
+            msgRemote(msg.data, this);
         });
     }
 
@@ -51,7 +49,9 @@ export class WsClientConnector extends Connector {
         this.rws.close();
 
         // schedule reconnecting
-        setTimeout(this.rws.reconnect, time);
+        setTimeout(() => {
+            this.rws.reconnect();
+        }, time);
     }
 
     // handle commands
@@ -71,5 +71,7 @@ export class WsClientConnector extends Connector {
         }
     }
 
-    cleanup() {}
+    cleanup() {
+        this.rws.close();
+    }
 }

@@ -24,31 +24,29 @@ export class WsServerConnector extends Connector {
         this.RR_NEXT_ENDPOINT = 0;
         this.ACTIVE_CONNECTIONS = [];
 
-        let wsServer = this;
-
-        this.wss.on("connection", function(ws) {
+        this.wss.on("connection", (ws) => {
             // Make our server behave the right way
-            wsServer.connection = new WsConnection(ws, wsServer);
-            wsServer.connection.prepare();
+            this.connection = new WsConnection(ws, this);
+            this.connection.prepare();
 
             // add new connections to round-robin list
-            const numConnections = wsServer.ACTIVE_CONNECTIONS.push(wsServer.connection);
+            const numConnections = this.ACTIVE_CONNECTIONS.push(this.connection);
             logging.stdout(`Endpoint ${numConnections-1} connected.`, TAG);
         });
 
         // https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
         // make sure none of our endpoints have become disconnected
-        const testAlive = setInterval(function() {
-            wsServer.wss.clients.forEach(function(ws) {
+        const testAlive = setInterval(() => {
+            this.wss.clients.forEach((ws) => {
                 if (ws.isAlive === false)
-                    return wsServer.close(ws);
+                    return this.close(ws);
 
                 ws.isAlive = false;
-                ws.ping(function() {});
+                ws.ping(function doNothing() {});
             });
         }, 30000);
 
-        this.wss.on("close", function() {
+        this.wss.on("close", () => {
             clearInterval(testAlive);
         });
 
@@ -92,9 +90,8 @@ export class WsServerConnector extends Connector {
 
     // close all connections
     cleanup() {
-        const wsServer = this;
-        this.ACTIVE_CONNECTIONS.forEach(function(c) {
-            wsServer.close(c);
+        this.ACTIVE_CONNECTIONS.forEach((c) => {
+            this.close(c);
         });
     }
 

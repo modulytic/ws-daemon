@@ -5,10 +5,9 @@
 
 import fsops from "./include/fs-ops.js";
 import logging from "./include/logging.js";
+import { ExecModes } from "./include/config.js";
 
 import { InputServer } from "./interfaces/local/input-server.js";
-
-import { ExecModes } from "./include/config.js";
 import { WsClientConnector } from "./interfaces/remote/client/ws-client.js";
 import { WsServerConnector } from "./interfaces/remote/server/ws-server.js";
 

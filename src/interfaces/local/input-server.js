@@ -23,29 +23,29 @@ export class InputServer {
         logging.stdout(`Listening at ${socket}`, TAG);
 
         // Create our Unix socket
-        let inputServer = this;
         this.UDS_CONNECTIONS = {};
-        this.server = net.createServer(function(stream) {
+        this.server = net.createServer((stream) => {
             logging.stdout("Received connection.", TAG);
 
             // Store all connections so we can terminate them if the server closes.
             // An object is better than an array for these.
             var self = Date.now();
-            inputServer.UDS_CONNECTIONS[self] = (stream);
-            stream.on("end", function () {
+            this.UDS_CONNECTIONS[self] = (stream);
+            stream.on("end", () => {
                 logging.stdout("Client disconnected.", TAG);
-                delete inputServer.UDS_CONNECTIONS[self];
+                delete this.UDS_CONNECTIONS[self];
+                connector.setStream(null);
             });
 
             // Messages are buffers
-            stream.on("data", function(msg) {
+            stream.on("data", (msg) => {
                 msgLocal(msg, connector);
             });
         })
         .listen(socket)
-        .on("connection", function(socket) {
+        .on("connection", (socket) => {
             connector.setStream(socket);
-        });
+        });         // give stream to connector
     }
 
     cleanup() {

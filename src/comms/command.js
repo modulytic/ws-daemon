@@ -29,6 +29,15 @@ export const CmdCode = {
 const SIGNIFIER_REMOTE = "&cmd";
 const SIGNIFIER_LOCAL  = "+cmd";
 
+function createMsg(cmd, signifier) {
+    return {
+        "name": signifier,
+        "params": {
+            "code": cmd
+        }
+    };
+}
+
 export const CmdMsg = {
     SIGNIFIER_REMOTE: SIGNIFIER_REMOTE,
     SIGNIFIER_LOCAL: SIGNIFIER_LOCAL,
@@ -37,17 +46,16 @@ export const CmdMsg = {
         SIGNIFIER_LOCAL
     ],
 
-    create: function(cmd) {
-        return {
-            "name": CmdMsg.SIGNIFIER,
-            "params": {
-                "code": cmd
-            }
-        };
+    createLocal: function(cmd) {
+        return createMsg(cmd, SIGNIFIER_LOCAL);
+    },
+
+    createRemote: function(cmd) {
+        return createMsg(cmd, SIGNIFIER_REMOTE);
     },
 
     parse: function(msg) {
-        if (typeof msg === 'string' || msg instanceof String)
+        if (typeof msg === "string" || msg instanceof String)
             msg = JSON.parse(msg);
 
         if (!CmdMsg.SIGNIFIERS.includes(msg["name"]))
@@ -57,7 +65,7 @@ export const CmdMsg = {
     },
 
     getData: function(msg) {
-        if (typeof msg === 'string' || msg instanceof String)
+        if (typeof msg === "string" || msg instanceof String)
             msg = JSON.parse(msg);
 
         return msg["params"]["data"];

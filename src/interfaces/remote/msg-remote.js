@@ -27,10 +27,14 @@ export default function(msg, connector) {
     
             default: {
                 execScript(msg_json["name"], msg_json["params"], function(code) {
-                    const res = StatusMsg.create(code);
-                    const resStr = JSON.stringify(res);
-    
-                    connector.stream.write(`${resStr}\n`);
+                    if (connector.stream) {
+                        const res = StatusMsg.create(code);
+                        const resStr = JSON.stringify(res);
+
+                        connector.stream.write(`${resStr}\n`);
+                    } else {
+                        logging.stdout("No client connected, skipping status", TAG);
+                    }
                 });
                 break;
             }

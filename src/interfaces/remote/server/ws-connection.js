@@ -17,21 +17,19 @@ export class WsConnection {
     }
 
     prepare() {
-        let wsConnection = this;
-
         this.ws.isAlive = true;
-        this.ws.on("pong", function() {
-            wsConnection.ws.isAlive = true;
+        this.ws.on("pong", () => {
+            this.ws.isAlive = true;
         });
 
         // endpoint disconnected, remove from active connections
-        this.ws.on("close", function() {
-            wsConnection.close();
+        this.ws.on("close", () => {
+            this.close();
         });
 
         // on message decode JSON and run file from scripts folder
-        this.ws.on("message", function(msg) {
-            msgRemote(msg, wsConnection.server);
+        this.ws.on("message", (msg) => {
+            msgRemote(msg, this.server);
         });
     }
 

@@ -33,5 +33,6 @@ export function execScript(filename, params, exitCb) {
         }
     } catch(err) {
         logging.stderr(err);
+        exitCb(-1);
     }
 }
