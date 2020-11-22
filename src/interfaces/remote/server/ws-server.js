@@ -66,9 +66,9 @@ export class WsServerConnector extends Connector {
     }
 
     // send message to the next dongle
-    forward(msg) {
+    forward(msg, advance=true) {
         logging.stdout("Forwarding message to connected client", TAG);
-        const conn = this.getEndpoint();
+        const conn = this.getEndpoint(advance);
 
         if (conn)
             conn.send(msg);
@@ -96,17 +96,5 @@ export class WsServerConnector extends Connector {
     }
 
     // handle commands
-    handleCmd(cmdMsg) {
-        logging.stdout("Handling command", TAG);
-        const cmd  = CmdMsg.parse(cmdMsg);
-        // const data = CmdMsg.getData(cmdMsg);
-
-        switch (cmd) {
-            // server cannot pause, so ignore this command
-            case CmdCode.PAUSE:
-                break;
-
-            default: break;
-        }
-    }
+    customCmd(_, __) {}
 }

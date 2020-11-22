@@ -5,8 +5,7 @@
 
 import logging from "../../include/logging.js";
 
-import { CmdMsg } from "../../comms/command.js";
-import { StatusMsg } from "../../comms/status.js";
+import { CmdCode, CmdMsg } from "../../comms/command.js";
 import { execScript } from "../../service/exec-script.js";
 
 const TAG = "MsgRemote";
@@ -27,13 +26,14 @@ export default function(msg, connector) {
     
             default: {
                 execScript(msg_json["name"], msg_json["params"], function(code) {
-                    if (connector.stream) {
-                        const res = StatusMsg.create(code);
-                        const resStr = JSON.stringify(res);
+                    // when status code of process is received, send remote STATUS command
+                    const statusCmd = CmdMsg.createRemote(CmdCode.STATUS, code);
+                    const statusStr = JSON.stringify(statusCmd);
 
-                        connector.stream.write(`${resStr}\n`);
-                    } else {
-                        logging.stdout("No client connected, skipping status", TAG);
+                    try {
+                        connector.forward(statusStr, false);
+                    } catch (e) {
+                        connector.forward(statusStr);
                     }
                 });
                 break;

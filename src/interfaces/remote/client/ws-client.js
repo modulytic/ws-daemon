@@ -55,12 +55,7 @@ export class WsClientConnector extends Connector {
     }
 
     // handle commands
-    handleCmd(cmdMsg) {
-        const cmd  = CmdMsg.parse(cmdMsg);
-        const data = CmdMsg.getData(cmdMsg);
-
-        logging.stdout(`Executing ${cmd}`, TAG);
-
+    customCmd(cmd, data) {
         switch (cmd) {
             case CmdCode.PAUSE: {
                 this.pause(data);

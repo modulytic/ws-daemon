@@ -21,6 +21,7 @@
 // parse command from string
 export const CmdCode = {
     PAUSE: "PAUSE",
+    STATUS: "STATUS",
     parse: function(msg) {
         return this[msg.toUpperCase()];
     }
@@ -29,11 +30,12 @@ export const CmdCode = {
 const SIGNIFIER_REMOTE = "&cmd";
 const SIGNIFIER_LOCAL  = "+cmd";
 
-function createMsg(cmd, signifier) {
+function createMsg(cmd, signifier, data=null) {
     return {
         "name": signifier,
         "params": {
-            "code": cmd
+            "code": cmd,
+            "data": data
         }
     };
 }
@@ -46,12 +48,12 @@ export const CmdMsg = {
         SIGNIFIER_LOCAL
     ],
 
-    createLocal: function(cmd) {
-        return createMsg(cmd, SIGNIFIER_LOCAL);
+    createLocal: function(cmd, data=null) {
+        return createMsg(cmd, SIGNIFIER_LOCAL, data);
     },
 
-    createRemote: function(cmd) {
-        return createMsg(cmd, SIGNIFIER_REMOTE);
+    createRemote: function(cmd, data=null) {
+        return createMsg(cmd, SIGNIFIER_REMOTE, data);
     },
 
     parse: function(msg) {
