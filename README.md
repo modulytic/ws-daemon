@@ -86,15 +86,14 @@ There are certain commands built into ws-daemon. They have this structure:
 }
 ```
 
-`&cmd` will run the command on the remote machine, and `+cmd` will run it on the local machine. `data` can have a value, but does not have to, since not all commands require any params.
+`&cmd` will run the command on the remote machine, and `+cmd` will run it on the local machine. `data` can have a value, but does not have to, since not all commands require params.
 
-Here are the possible commands.
+Here are the possible commands. Note that some only work in a particular mode.
 
-Executed on a client:
-
-1. `code: "PAUSE", data: int`, **description**: suspends connection from client for `data` ms
-
-There are currently no server commands.
+| `code` | `data` type | Client supports? | Server supports? | Description |
+|---|---|---|---|---|
+| PAUSE | `int` | ✅ | ❌ | suspend client connection for `data` ms |
+| STATUS | `int` | ✅ | ✅ | send an integer status to local socket |
 
 ## Running
 
