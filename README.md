@@ -60,6 +60,21 @@ If this daemon receives a message, it will decode it as JSON. It expects this st
 
 If the message is not a command, the parameter `name` should be the name of a file in `scripts/` with execute permissions. The params will be stringified and passed otherwise unmodified to that script as an argument.
 
+### Status
+
+After executing a script, ws-daemon will return its status in the local socket:
+
+```json
+{
+	"name": "+stat",
+	"params": {
+		"code": 0
+	}
+}
+```
+
+`code` will be set to whatever status the process exited with.
+
 ### Commands
 
 There are certain commands built into ws-daemon. They have this structure:
