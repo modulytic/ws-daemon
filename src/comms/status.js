@@ -15,11 +15,6 @@
 
 export const StatusMsg = {
     create: function(stat) {
-        return {
-            "name": "+stat",
-            "params": {
-                "code": stat
-            }
-        };
+        return { "status": stat };
     }
 }

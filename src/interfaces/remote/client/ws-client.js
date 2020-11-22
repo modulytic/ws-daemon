@@ -51,9 +51,7 @@ export class WsClientConnector extends Connector {
         this.rws.close();
 
         // schedule reconnecting
-        setTimeout(() => {
-            this.rws.reconnect();
-        }, time);
+        setTimeout(this.rws.reconnect, time);
     }
 
     // handle commands

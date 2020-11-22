@@ -66,14 +66,11 @@ After executing a script, ws-daemon will return its status in the local socket:
 
 ```json
 {
-	"name": "+stat",
-	"params": {
-		"code": 0
-	}
+    "status": 0
 }
 ```
 
-`code` will be set to whatever status the process exited with.
+`status` will be set to whatever status the process exited with.
 
 ### Commands
 
@@ -81,11 +78,11 @@ There are certain commands built into ws-daemon. They have this structure:
 
 ```json
 {
-	"name": "&cmd or +cmd",
-	"params": {
-		"code": "COMMAND",
-		"data": null
-	}
+    "name": "&cmd or +cmd",
+    "params": {
+        "code": "COMMAND",
+        "data": null
+    }
 }
 ```
 

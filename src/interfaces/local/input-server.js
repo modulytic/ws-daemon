@@ -46,8 +46,6 @@ export class InputServer {
         .on("connection", function(socket) {
             connector.setStream(socket);
         });
-
-        
     }
 
     cleanup() {

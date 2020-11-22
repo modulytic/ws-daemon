@@ -30,7 +30,7 @@ export default function(msg, connector) {
                     const res = StatusMsg.create(code);
                     const resStr = JSON.stringify(res);
     
-                    connector.stream.write(resStr);
+                    connector.stream.write(`${resStr}\n`);
                 });
                 break;
             }
