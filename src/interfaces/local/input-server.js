@@ -41,7 +41,13 @@ export class InputServer {
             stream.on("data", function(msg) {
                 msgLocal(msg, connector);
             });
-        }).listen(socket);
+        })
+        .listen(socket)
+        .on("connection", function(socket) {
+            connector.setStream(socket);
+        });
+
+        
     }
 
     cleanup() {

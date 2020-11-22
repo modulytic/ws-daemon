@@ -9,7 +9,7 @@ import { spawn } from "child_process";
 import fsops from "../include/fs-ops.js";
 import logging from "../include/logging.js";
 
-export function execScript(filename, params) {
+export function execScript(filename, params, exitCb) {
     const scriptPath = fsops.getPrefixFile(filename, "scripts");
     const paramsStr  = JSON.stringify(params);
 
@@ -28,6 +28,7 @@ export function execScript(filename, params) {
 
             childProcess.on("close", (code) => {
                 logging.stdout(`exited with code ${code}`, filename);
+                exitCb(code);
             });
         }
     } catch(err) {

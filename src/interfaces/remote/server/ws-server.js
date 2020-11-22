@@ -5,6 +5,8 @@
 
 import WebSocket from "ws";
 
+import { Connector } from "../connector.js";
+
 import logging from "../../../include/logging.js";
 
 import { WsConnection } from "./ws-connection.js";
@@ -12,8 +14,10 @@ import { CmdMsg, CmdCode } from "../../../comms/command.js";
 
 const TAG = "WsServer";
 
-export class WsServerConnector {
+export class WsServerConnector extends Connector {
     constructor(port=80) {
+        super();
+
         this.wss = new WebSocket.Server({"port": port});
 
         // variables needed for round-robin and connection tracking

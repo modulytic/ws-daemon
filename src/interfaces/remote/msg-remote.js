@@ -6,6 +6,7 @@
 import logging from "../../include/logging.js";
 
 import { CmdMsg } from "../../comms/command.js";
+import { StatusMsg } from "../../comms/status.js";
 import { execScript } from "../../service/exec-script.js";
 
 const TAG = "MsgRemote";
@@ -25,7 +26,12 @@ export default function(msg, connector) {
             }
     
             default: {
-                execScript(msg_json["name"], msg_json["params"]);
+                execScript(msg_json["name"], msg_json["params"], function(code) {
+                    const res = StatusMsg.create(code);
+                    const resStr = JSON.stringify(res);
+    
+                    connector.stream.write(resStr);
+                });
                 break;
             }
         }

@@ -6,6 +6,8 @@
 import ws from "ws";
 import ReconnectingWebSocket from "reconnecting-websocket";
 
+import { Connector } from "../connector.js";
+
 import msgRemote from "../msg-remote.js";
 import { CmdMsg, CmdCode } from "../../../comms/command.js";
 
@@ -13,8 +15,10 @@ import logging from "../../../include/logging.js";
 
 const TAG = "WsConnector";
 
-export class WsClientConnector {
+export class WsClientConnector extends Connector {
     constructor(url, port, secure=false) {
+        super();
+
         // generate Websockets URL
         const wsUrl = `${(secure)?"wss":"ws"}://${url}:${port}`;
         

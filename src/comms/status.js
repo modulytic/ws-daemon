@@ -6,50 +6,20 @@
 
 /* command message format:
 {
-    "name": "&stat",
+    "name": "+stat",
     "params": {
-        "code": str,
-        "data": str     // could be error messages, etc.
+        "code": int
     }
 } 
 */
 
-const STATUS_SIGNIFIER = "&stat";
-
-// parse command from string
-export const StatusCode = {
-    OK: "OK",
-    ERROR: "ERROR",
-    parse: function(msg) {
-        return this[msg.toUpperCase()];
-    }
-};
-
 export const StatusMsg = {
-    create: function(stat, data=null) {
+    create: function(stat) {
         return {
-            "name": STATUS_SIGNIFIER,
+            "name": "+stat",
             "params": {
-                "code": stat,
-                "data": data
+                "code": stat
             }
         };
-    },
-
-    parse: function(msg) {
-        if (typeof msg === 'string' || msg instanceof String)
-            msg = JSON.parse(msg);
-
-        if (msg["name"] != STATUS_SIGNIFIER)
-            return null;
-
-        return StatusCode.parse(msg["params"]["code"]);
-    },
-
-    getData: function(msg) {
-        if (typeof msg === 'string' || msg instanceof String)
-            msg = JSON.parse(msg);
-
-        return msg["params"]["data"];
     }
 }
