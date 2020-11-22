@@ -1,7 +1,5 @@
 # ws-daemon
 
-**NOTE: This project is horribly written, as it was made in the span of about 3.5 hours late at night/early in the morning.** If this message is still here, it means I haven't cleaned it up yet. Use at your own risk.
-
 This is a daemon that facilitates an easy, two-way, persistent, JSON-based, communication channel between processes on different machines, in different languages, on different system. It communicates with local processes through a Unix socket, and remote processes through WebSockets. Remote processes can trigger scripts on your local system with custom params (received through WebSockets), and you can do the same for them (written to the local socket).
 
 If the daemon is in server mode and it has multiple connections, it will message them each sequentially in a round-robin fashion.
@@ -39,11 +37,13 @@ If it is a server, it is similar:
 
 ### Socket
 
-The socket is located in the prefix, and is called `ws-daemon.sock`. It can be connected to externally and written to, but the daemon will not send any data back through this socket.
+The socket is located in the prefix, and is called `ws-daemon.sock`. It can be connected to externally and written to, but the daemon will not send any data back through this socket. However, status updates through it are a feature that will be implemented soon.
+
+If `ws-daemon.sock` already exists, the daemon will try to create a different file, starting with `ws-daemon0.sock` and increasing until a file exists.
 
 ### Scripts
 
-Scripts are located in the `scripts/` subdirectory of the prefix.
+Scripts are located in the `scripts/` subdirectory of the prefix. **Make sure they are marked as executable, otherwise ws-daemon cannot run them!** 
 
 ### Messaging
 
@@ -58,7 +58,31 @@ If this daemon receives a message, it will decode it as JSON. It expects this st
 }
 ```
 
-The parameter `name` should be the name of a file in `scripts/` with execute permissions. The params will be stringified and passed otherwise unmodified to that script as an argument.
+If the message is not a command, the parameter `name` should be the name of a file in `scripts/` with execute permissions. The params will be stringified and passed otherwise unmodified to that script as an argument.
+
+### Commands
+
+There are certain commands built into ws-daemon. They have this structure:
+
+```json
+{
+	"name": "&cmd or +cmd",
+	"params": {
+		"code": "COMMAND",
+		"data": null
+	}
+}
+```
+
+`&cmd` will run the command on the remote machine, and `+cmd` will run it on the local machine. `data` can have a value, but does not have to, since not all commands require any params.
+
+Here are the possible commands.
+
+Executed on a client:
+
+1. `code: "PAUSE", data: int`, **description**: suspends connection from client for `data` ms
+
+There are currently no server commands.
 
 ## Running
 

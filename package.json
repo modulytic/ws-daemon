@@ -12,6 +12,6 @@
         "ws": "*"
     },
     "scripts": {
-        "start": "node src/daemon.js"
+        "start": "node src/app.js"
     }
 }

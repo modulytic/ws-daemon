@@ -1,24 +1,25 @@
-// constants.js
-// Noah Sandman <noah@modulytic.com>
+// fsops.js
+// Noah Sandman
+
+// Filesystem operations
 
 import fs from "fs";
 import getenv from "getenv";
 
 export default {
+    // get prefix for ws-daemon
     getPrefix: function() {
         return getenv.string("WSDAEMON_PREFIX", "/root/ws-daemon");
     },
+
+    // get file in root or subdir of prefix folder
     getPrefixFile: function(file, subdir="") {
         if (subdir != "")
             subdir = "/" + subdir
         return this.getPrefix() + subdir + "/" + file;
     },
 
-    createWsUrl: function(url, port=80, secure=false) {
-        const prefix = (secure) ? "wss" : "ws";
-        return prefix + "://" + url + ":" + port;
-    },
-
+    // read configuration from prefix folder
     config: null,
     getConfig: function() {
         if (this.config)
@@ -29,5 +30,5 @@ export default {
 
         this.config = JSON.parse(rawdata);
         return this.getConfig();
-    }   
+    }
 }
