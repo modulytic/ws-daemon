@@ -5,7 +5,6 @@
 
 import logging from "../../include/logging.js";
 
-import { StatusMsg } from "../../comms/status.js";
 import { CmdMsg, CmdCode } from "../../comms/command.js";
 
 export class Connector {
@@ -31,9 +30,7 @@ export class Connector {
             // when receiving a status command, print the status response to command line
             case CmdCode.STATUS: {
                 if (this.stream) {
-                    const res = StatusMsg.create(data);
-                    const resStr = JSON.stringify(res);
-
+                    const resStr = JSON.stringify(data);
                     this.stream.write(`${resStr}\n`);
                 } else {
                     logging.stdout("No client connected, skipping status", this.TAG);

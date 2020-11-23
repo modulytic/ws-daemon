@@ -14,7 +14,7 @@
 */
 
 export const StatusMsg = {
-    create: function(stat) {
-        return { "status": stat };
+    create: function(stat, id) {
+        return { "status": stat, "id": id };
     }
 }

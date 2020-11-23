@@ -5,6 +5,8 @@
 
 import logging from "../../include/logging.js";
 
+import { StatusMsg } from "../../comms/status.js";
+
 import { CmdCode, CmdMsg } from "../../comms/command.js";
 import { execScript } from "../../service/exec-script.js";
 
@@ -25,17 +27,22 @@ export default function(msg, connector) {
             }
     
             default: {
-                execScript(msg_json["name"], msg_json["params"], function(code) {
-                    // when status code of process is received, send remote STATUS command
-                    const statusCmd = CmdMsg.createRemote(CmdCode.STATUS, code);
-                    const statusStr = JSON.stringify(statusCmd);
+                execScript(
+                    msg_json["name"], 
+                    msg_json["params"], 
+                    (code) => {
+                        // when status code of process is received, send remote STATUS command
+                        const statusMsg = StatusMsg.create(code, msg_json["id"]);
+                        const statusCmd = CmdMsg.createRemote(CmdCode.STATUS, statusMsg);
+                        const statusStr = JSON.stringify(statusCmd);
 
-                    try {
-                        connector.forward(statusStr, false);
-                    } catch (e) {
-                        connector.forward(statusStr);
+                        try {
+                            connector.forward(statusStr, false);
+                        } catch (e) {
+                            connector.forward(statusStr);
+                        }
                     }
-                });
+                );
                 break;
             }
         }

@@ -52,13 +52,14 @@ If this daemon receives a message, it will decode it as JSON. It expects this st
 ```json
 {
     "name": "<script name>",
+    "id": "cf2bf77f-6ad0-47ca-aba7-f300b3c63268",
     "params": {
         "param1": "val1"
     }
 }
 ```
 
-If the message is not a command, the parameter `name` should be the name of a file in `scripts/` with execute permissions. The params will be stringified and passed otherwise unmodified to that script as an argument.
+If the message is not a command, the parameter `name` should be the name of a file in `scripts/` with execute permissions. `id` is optional, but it can be a string in any format, as long as it is unique. `params` will be stringified and passed otherwise unmodified to that script as an argument.
 
 ### Status
 
@@ -66,11 +67,12 @@ After executing a script, ws-daemon will return its status in the local socket:
 
 ```json
 {
-    "status": 0
+    "status": 0,
+    "id": "cf2bf77f-6ad0-47ca-aba7-f300b3c63268"
 }
 ```
 
-`status` will be set to whatever status the process exited with.
+`status` will be set to whatever status the process exited with, and `id` will be the ID parameter of the corresponding request, if provided.
 
 ### Commands
 
@@ -93,7 +95,7 @@ Here are the possible commands. Note that some only work in a particular mode.
 | `code` | `data` type | Client supports? | Server supports? | Description |
 |---|---|---|---|---|
 | PAUSE | `int` | ✅ | ❌ | suspend client connection for `data` ms |
-| STATUS | `int` | ✅ | ✅ | send an integer status to local socket |
+| STATUS | `json` | ✅ | ✅ | send a status to local socket. status: int, id: str |
 
 ## Running
 
