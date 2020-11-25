@@ -40,7 +40,12 @@ export class WsClientConnector extends Connector {
     }
 
     forward(msg) {
-        this.rws.send(msg);
+        try {
+            this.rws.send(msg);
+            return true;
+        } catch (e) {           // if there were any errors, return failure
+            return false;
+        }
     }
 
     // pause for a cetain amount of time (ms)

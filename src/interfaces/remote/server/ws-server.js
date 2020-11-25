@@ -24,14 +24,15 @@ export class WsServerConnector extends Connector {
         this.RR_NEXT_ENDPOINT = 0;
         this.ACTIVE_CONNECTIONS = [];
 
-        this.wss.on("connection", (ws) => {
+        this.wss.on("connection", (ws, req) => {
             // Make our server behave the right way
             this.connection = new WsConnection(ws, this);
             this.connection.prepare();
 
             // add new connections to round-robin list
             const numConnections = this.ACTIVE_CONNECTIONS.push(this.connection);
-            logging.stdout(`Endpoint ${numConnections-1} connected.`, TAG);
+            const ip = req.socket.remoteAddress;
+            logging.stdout(`Endpoint ${numConnections-1} connected from ${ip}.`, TAG);
         });
 
         // https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
@@ -70,8 +71,16 @@ export class WsServerConnector extends Connector {
         logging.stdout("Forwarding message to connected client", TAG);
         const conn = this.getEndpoint(advance);
 
-        if (conn)
-            conn.send(msg);
+        if (conn) {
+            try {
+                conn.send(msg);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     // close a specific connection

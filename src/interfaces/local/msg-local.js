@@ -5,7 +5,7 @@
 
 import logging from "../../include/logging.js";
 
-import { CmdMsg } from "../../comms/command.js";
+import { CmdCode, CmdMsg } from "../../comms/command.js";
 
 const TAG = "MsgLocal";
 
@@ -23,7 +23,17 @@ export default function(msg, connector) {
             }
 
             default: {
-                connector.forward(msg_str);
+                const success = connector.forward(msg_str);
+
+                // this will fire if there are no clients connected to the server
+                //  or just generally if there was an error forwarding
+                if (!success) {
+                    const failureMsg = CmdMsg.createLocal(CmdCode.STATUS, {
+                        "status": -2,
+                        "id": msg_json["id"]
+                    });
+                    connector.handleCmd(failureMsg);
+                }
             }
         }
     } catch (e) {
