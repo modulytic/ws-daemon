@@ -43,7 +43,7 @@ If `ws-daemon.sock` already exists, the daemon will try to create a different fi
 
 ### Scripts
 
-Scripts are located in the `scripts/` subdirectory of the prefix. **Make sure they are marked as executable, otherwise ws-daemon cannot run them!** 
+Scripts are located in the `scripts/` subdirectory of the prefix. **Make sure they are marked as executable, otherwise ws-daemon cannot run them!**
 
 ### Messaging
 
@@ -100,3 +100,9 @@ Here are the possible commands. Note that some only work in a particular mode.
 ## Running
 
 Once your environment is configured, just run `npm start` to start the daemon. To run it in the background, run `npm start &`.
+
+## Docker
+
+If ws-daemon is running inside Docker, it will instead listen locally on port 9007.
+
+Scripts should be placed in `/usr/src/app/scripts` using volumes. Your config file should be put in `/usr/src/app/config.json`. Also, any commands you need to run so that your scripts can run (installing dependencies, interpreters, etc.) should be put in `/usr/src/app/setup.sh`.

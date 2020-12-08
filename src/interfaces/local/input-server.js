@@ -10,11 +10,18 @@ import msgLocal from "./msg-local.js";
 import fsops from "../../include/fs-ops.js";
 import logging from "../../include/logging.js";
 
+import isDocker from "is-docker";
+
 const TAG = "LocalServer";
 
 export class InputServer {
     constructor(connector) {
-        let socket = fsops.getPrefixFile("ws-daemon.sock");
+        let socket = null;
+        if (isDocker()) {
+            socket = 9007;
+        } else {
+            socket = fsops.getPrefixFile("ws-daemon.sock");
+        }
 
         for (let i = 0; fs.existsSync(socket); i++) {
             socket = fsops.getPrefixFile(`ws-daemon${i}.sock`);

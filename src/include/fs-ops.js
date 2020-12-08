@@ -1,5 +1,5 @@
 // fsops.js
-// Noah Sandman
+// Noah Sandman <noah@modulytic.com>
 
 // Filesystem operations
 
